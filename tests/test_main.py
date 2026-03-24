@@ -41,7 +41,7 @@ def test_root_endpoint_exposes_basic_api_metadata(client: TestClient) -> None:
     response = client.get("/")
 
     assert response.status_code == 200
-    assert response.json()["name"] == "Shopping Price Alert API"
+    assert response.json()["name"] == "PriceRadar API"
     assert response.json()["docs"] == "/docs"
 
 

@@ -15,7 +15,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     yield
 
 
-app = FastAPI(title="Shopping Price Alert API", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="PriceRadar API", version="0.1.0", lifespan=lifespan)
 
 
 def get_product_service(session: Session = Depends(get_session)) -> ProductService:
@@ -25,7 +25,7 @@ def get_product_service(session: Session = Depends(get_session)) -> ProductServi
 @app.get("/", tags=["Meta"], summary="Get API summary")
 def root() -> dict[str, str]:
     return {
-        "name": "Shopping Price Alert API",
+        "name": "PriceRadar API",
         "version": "0.1.0",
         "docs": "/docs",
         "health": "/health",

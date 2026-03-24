@@ -1,6 +1,6 @@
-# Shopping Price Alert App
+# PriceRadar - Shopping Price Tracking and Alert System
 
-`Shopping Price Alert App` is a small `FastAPI` backend for tracking products and saving a target price for future alerts. The current version focuses on the core CRUD flow for tracked products and is structured so it can grow into later exercises without replacing the API foundation.
+`PriceRadar` is a small `FastAPI` backend for tracking products and saving a target price for future alerts. The current version focuses on the core CRUD flow for tracked products and is structured so it can grow into later exercises without replacing the API foundation.
 
 ## Stack
 

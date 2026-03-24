@@ -1,1 +1,1 @@
-"""Shopping Price Alert application package."""
+"""PriceRadar application package."""

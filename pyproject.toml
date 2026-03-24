@@ -1,7 +1,7 @@
 [project]
-name = "shopping-price-alert-app"
+name = "priceradar"
 version = "0.1.0"
-description = "EX1 FastAPI backend for a shopping price alert application"
+description = "PriceRadar backend for shopping price tracking and alerts"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
