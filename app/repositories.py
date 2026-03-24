@@ -8,7 +8,7 @@ class ProductRepository:
         self.session = session
 
     def list(self, *, offset: int = 0, limit: int = 100) -> list[TrackedProduct]:
-        statement = select(TrackedProduct).offset(offset).limit(limit)
+        statement = select(TrackedProduct).order_by(TrackedProduct.id).offset(offset).limit(limit)
         return list(self.session.exec(statement))
 
     def get(self, product_id: int) -> TrackedProduct | None:

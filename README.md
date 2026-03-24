@@ -17,6 +17,7 @@
 - Filterable list endpoint with `offset` and `limit`
 - Auto-generated API docs with Swagger and ReDoc
 - Sample seed script for demo data
+- Input validation for URLs, prices, and required fields
 
 ## Product Model
 
@@ -89,6 +90,7 @@ Interactive docs:
 
 ## Main Endpoints
 
+- `GET /`
 - `GET /health`
 - `GET /products`
 - `GET /products/{product_id}`
@@ -124,6 +126,14 @@ If `uv` is not installed, use:
 python -m pytest
 ```
 
+Current automated coverage includes:
+
+- Empty-state listing
+- Create, update, delete flows
+- Missing-resource `404` handling
+- Pagination behavior
+- Validation failures for invalid URL and invalid target price
+
 ## Project Structure
 
 - `app/main.py`: FastAPI app, routes, and startup lifecycle
@@ -141,6 +151,28 @@ python -m pytest
 - The app reads `DATABASE_URL` directly from the environment; `.env.example` is documentation only unless you load it yourself.
 - `requests.http` can be used from editors that support HTTP request files.
 - The layered structure keeps route handlers thin and makes later features easier to add.
+
+## EX1 Submission Checklist
+
+- REST API implemented with `FastAPI`
+- Persistent storage implemented with `SQLite` and `SQLModel`
+- Full CRUD for the main resource `tracked products`
+- Separation between routes, service logic, and repository access
+- Automated tests included and passing
+- `README` includes setup, run, and test instructions
+- Manual request file included for quick demo during grading
+
+## Suggested Demo Flow
+
+If the lecturer opens the project for a quick review, this order is the clearest:
+
+1. Open Swagger at `http://127.0.0.1:8000/docs`
+2. Call `GET /health`
+3. Create a product with `POST /products`
+4. Show `GET /products` and `GET /products/{id}`
+5. Update the price with `PUT /products/{id}`
+6. Delete it with `DELETE /products/{id}`
+7. Mention that tests pass with `python -m pytest`
 
 ## AI Assistance
 

@@ -37,6 +37,14 @@ def test_list_products_starts_empty(client: TestClient) -> None:
     assert response.json() == []
 
 
+def test_root_endpoint_exposes_basic_api_metadata(client: TestClient) -> None:
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.json()["name"] == "Shopping Price Alert API"
+    assert response.json()["docs"] == "/docs"
+
+
 def test_create_product(client: TestClient) -> None:
     payload = {
         "name": "Sony WH-1000XM5",
@@ -84,6 +92,39 @@ def test_update_product(client: TestClient) -> None:
     assert data["is_active"] is False
 
 
+def test_list_products_supports_pagination(client: TestClient) -> None:
+    payloads = [
+        {
+            "name": "Product A",
+            "store": "Store A",
+            "product_url": "https://example.com/products/a",
+            "current_price": 100.0,
+            "target_price": 80.0,
+            "currency": "ILS",
+            "is_active": True,
+        },
+        {
+            "name": "Product B",
+            "store": "Store B",
+            "product_url": "https://example.com/products/b",
+            "current_price": 200.0,
+            "target_price": 150.0,
+            "currency": "ILS",
+            "is_active": True,
+        },
+    ]
+
+    for payload in payloads:
+        client.post("/products", json=payload)
+
+    response = client.get("/products", params={"offset": 1, "limit": 1})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["name"] == "Product B"
+
+
 def test_delete_product(client: TestClient) -> None:
     create_response = client.post(
         "/products",
@@ -111,6 +152,66 @@ def test_get_product_returns_404_when_missing(client: TestClient) -> None:
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Product not found"}
+
+
+def test_create_product_rejects_invalid_url(client: TestClient) -> None:
+    response = client.post(
+        "/products",
+        json={
+            "name": "Bad URL Product",
+            "store": "Store",
+            "product_url": "example.com/product",
+            "current_price": 100.0,
+            "target_price": 90.0,
+            "currency": "ILS",
+            "is_active": True,
+        },
+    )
+
+    assert response.status_code == 422
+
+
+def test_create_product_rejects_target_price_above_current_price(client: TestClient) -> None:
+    response = client.post(
+        "/products",
+        json={
+            "name": "Price Rule Product",
+            "store": "Store",
+            "product_url": "https://example.com/product",
+            "current_price": 100.0,
+            "target_price": 120.0,
+            "currency": "ILS",
+            "is_active": True,
+        },
+    )
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": "target_price must be less than or equal to current_price"
+    }
+
+
+def test_update_product_rejects_invalid_target_price_rule(client: TestClient) -> None:
+    create_response = client.post(
+        "/products",
+        json={
+            "name": "Rule Check Product",
+            "store": "Store",
+            "product_url": "https://example.com/rule-check",
+            "current_price": 100.0,
+            "target_price": 90.0,
+            "currency": "ILS",
+            "is_active": True,
+        },
+    )
+    product_id = create_response.json()["id"]
+
+    response = client.put(f"/products/{product_id}", json={"target_price": 150.0})
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": "target_price must be less than or equal to current_price"
+    }
 
 
 def test_update_product_returns_404_when_missing(client: TestClient) -> None:
