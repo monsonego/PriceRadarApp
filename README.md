@@ -1,22 +1,26 @@
-# Shopping Price Alert App - EX1
+# Shopping Price Alert App
 
-This project is the EX1 backend for a shopping price alert application. Users can track products, store the current price, and define a target price for future alerts.
+`Shopping Price Alert App` is a small `FastAPI` backend for tracking products and saving a target price for future alerts. The current version focuses on the core CRUD flow for tracked products and is structured so it can grow into later exercises without replacing the API foundation.
 
-The design stays intentionally small for EX1, but the codebase already uses a database-backed structure that can grow into EX2 and EX3 without replacing the core API.
+## Stack
 
-## Tech Stack
+- `FastAPI`
+- `SQLModel`
+- `SQLite`
+- `pytest`
+- Repository and service layers
 
-- FastAPI
-- SQLModel
-- SQLite
-- pytest
-- repository/service structure for easier extension
+## Features
 
-## API Resource
+- Create, view, update, and delete tracked products
+- Persist data in a local `SQLite` database
+- Filterable list endpoint with `offset` and `limit`
+- Auto-generated API docs with Swagger and ReDoc
+- Sample seed script for demo data
 
-The core resource is `tracked products`.
+## Product Model
 
-Fields:
+Tracked products contain:
 
 - `id`
 - `name`
@@ -28,7 +32,7 @@ Fields:
 - `is_active`
 - `created_at`
 
-## Setup with uv
+## Quick Start
 
 1. Create a virtual environment:
 
@@ -36,7 +40,7 @@ Fields:
 uv venv
 ```
 
-2. Activate it:
+2. Activate it on Windows PowerShell:
 
 ```bash
 .venv\Scripts\activate
@@ -48,10 +52,26 @@ uv venv
 uv sync
 ```
 
-4. Optional: seed sample products
+4. Optional: set a custom database path.
+
+PowerShell:
+
+```powershell
+$env:DATABASE_URL="sqlite:///./shopping_price_alert.db"
+```
+
+Bash:
 
 ```bash
-python scripts/seed_products.py
+export DATABASE_URL="sqlite:///./shopping_price_alert.db"
+```
+
+An example is also available in `.env.example`.
+
+5. Optional: seed sample products:
+
+```bash
+uv run python scripts/seed_products.py
 ```
 
 ## Run the API
@@ -60,54 +80,23 @@ python scripts/seed_products.py
 uv run uvicorn app.main:app --reload
 ```
 
-The API will start on `http://127.0.0.1:8000`.
+The API starts on `http://127.0.0.1:8000`.
 
 Interactive docs:
 
 - Swagger UI: `http://127.0.0.1:8000/docs`
 - ReDoc: `http://127.0.0.1:8000/redoc`
 
-Useful endpoints:
+## Main Endpoints
 
 - `GET /health`
 - `GET /products`
-- `GET /products/{id}`
+- `GET /products/{product_id}`
 - `POST /products`
-- `PUT /products/{id}`
-- `DELETE /products/{id}`
+- `PUT /products/{product_id}`
+- `DELETE /products/{product_id}`
 
-## Run Tests
-
-```bash
-uv run pytest
-```
-
-If you do not have `uv` installed yet, you can also run:
-
-```bash
-python -m pytest
-```
-
-## Project Structure
-
-- `app/main.py`: FastAPI routes and app startup
-- `app/models.py`: SQLModel entities and API schemas
-- `app/database.py`: database engine and sessions
-- `app/repositories.py`: data-access layer
-- `app/services.py`: business logic layer
-- `tests/test_main.py`: API tests
-- `scripts/seed_products.py`: sample data seeding
-- `requests.http`: manual API playground
-
-## Environment Variable
-
-The database URL can be overridden for future exercises:
-
-```bash
-$env:DATABASE_URL="sqlite:///./shopping_price_alert.db"
-```
-
-## Example Request
+Example create request:
 
 ```json
 {
@@ -121,15 +110,38 @@ $env:DATABASE_URL="sqlite:///./shopping_price_alert.db"
 }
 ```
 
-## Notes for Future Exercises
+## Tests
 
-- EX2 can reuse this API from a Streamlit dashboard or Typer CLI.
-- EX3 can add users, alerts, notifications, JWT protection, Redis, and a background worker without replacing the core product model.
-- The `DATABASE_URL` setting makes it easier to switch from SQLite to another database later.
-- The service/repository split is in place so new features do not need to be mixed directly into the route handlers.
-- Use `requests.http` to manually exercise the API in VS Code or IntelliJ HTTP Client.
-- Do not commit SQLite artifacts such as `shopping_price_alert.db`; regenerate the database locally when needed.
+Run the test suite with:
+
+```bash
+uv run pytest
+```
+
+If `uv` is not installed, use:
+
+```bash
+python -m pytest
+```
+
+## Project Structure
+
+- `app/main.py`: FastAPI app, routes, and startup lifecycle
+- `app/models.py`: SQLModel entities and request/response schemas
+- `app/database.py`: engine, session dependency, and table creation
+- `app/repositories.py`: data access layer
+- `app/services.py`: business logic layer
+- `scripts/seed_products.py`: inserts demo products into the database
+- `tests/test_main.py`: API test coverage
+- `requests.http`: manual request collection for local testing
+
+## Notes
+
+- The default database file `shopping_price_alert.db` is intentionally ignored by `git`.
+- The app reads `DATABASE_URL` directly from the environment; `.env.example` is documentation only unless you load it yourself.
+- `requests.http` can be used from editors that support HTTP request files.
+- The layered structure keeps route handlers thin and makes later features easier to add.
 
 ## AI Assistance
 
-This project was developed with AI assistance for planning, scaffolding, and code review. All generated output should be verified locally by running the API and the tests.
+This project was developed with AI assistance for planning, scaffolding, and review. The code and documentation should still be verified locally by running the API and tests.
