@@ -58,13 +58,13 @@ uv sync
 PowerShell:
 
 ```powershell
-$env:DATABASE_URL="sqlite:///./shopping_price_alert.db"
+$env:DATABASE_URL="sqlite:///./priceradar.db"
 ```
 
 Bash:
 
 ```bash
-export DATABASE_URL="sqlite:///./shopping_price_alert.db"
+export DATABASE_URL="sqlite:///./priceradar.db"
 ```
 
 An example is also available in `.env.example`.
@@ -147,7 +147,7 @@ Current automated coverage includes:
 
 ## Notes
 
-- The default database file `shopping_price_alert.db` is intentionally ignored by `git`.
+- The default database file `priceradar.db` is intentionally ignored by `git`.
 - The app reads `DATABASE_URL` directly from the environment; `.env.example` is documentation only unless you load it yourself.
 - `requests.http` can be used from editors that support HTTP request files.
 - The layered structure keeps route handlers thin and makes later features easier to add.
